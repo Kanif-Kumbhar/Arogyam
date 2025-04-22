@@ -8,7 +8,7 @@ import { Link } from "expo-router";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../services/FirebaseConfig.jsx";
-import { api } from "../../convex/_generated/api.js";
+import { api } from "../../convex/_generated/api";
 import { UserContext } from "../../context/UserContext.jsx";
 
 export default function SignIn() {
@@ -39,7 +39,10 @@ export default function SignIn() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode, errorMessage);
+        Alert.alert(
+          "Authentication Failed",
+          "The email or password you entered is incorrect. Please double-check your details and try again."
+        );
       });
   };
   return (

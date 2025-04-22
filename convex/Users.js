@@ -8,7 +8,7 @@ export const CreateNewUser = mutation({
   },
   handler: async (ctx, args) => {
     const user = await ctx.db
-      .query("users")
+      .query("Users")
       .filter((q) => q.eq(q.field("email"), args.email))
       .collect();
 
