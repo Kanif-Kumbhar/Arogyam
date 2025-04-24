@@ -28,8 +28,8 @@ export const CreateNewUser = mutation({
 });
 
 export const GetUser = query({
-  args:{
-    email: v.string()
+  args: {
+    email: v.string(),
   },
   handler: async (ctx, args) => {
     const user = await ctx.db
@@ -37,5 +37,24 @@ export const GetUser = query({
       .filter((q) => q.eq(q.field("email"), args.email))
       .collect();
     return user[0];
-  }
-})
+  },
+});
+
+export const UpdateUserPref = mutation({
+  args: {
+    uid: v.id("Users"),
+    height: v.float64(),
+    weight: v.float64(),
+    gender: v.string(),
+    goal: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const result = await ctx.db.patch(args.uid, {
+      height: args.height,
+      weight: args.weight,
+      goal: args.goal,
+      gender: args.gender,
+    });
+    return result;
+  },
+});
