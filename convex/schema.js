@@ -13,4 +13,15 @@ export default defineSchema({
     gender: v.optional(v.string()),
     goal: v.optional(v.string()),
   }),
+  NutritionProfile: defineTable({
+    userId: v.id("Users"),
+    bmi: v.float64(),
+    bmi_category: v.string(),
+    bmr: v.float64(),
+    calories: v.float64(),
+    carbs: v.float64(),
+    fats: v.float64(),
+    proteins: v.float64(),
+    createdAt: v.int64(), // Timestamp to know when this was calculated
+  }),
 });

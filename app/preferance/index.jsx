@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Touchable, TouchableOpacity, Alert } from "react-native";
 import React, { useState, useContext } from "react";
 import Colors from "../../shared/Colors";
+import { CalculateCaloriesAI } from "../../services/AiModel";
 import Input from "../../components/shared/Input";
 import Button from "./../../components/shared/Button";
 import {
@@ -8,50 +9,67 @@ import {
   MaleSymbolIcon,
   WeightScaleIcon,
   PlusSignSquareIcon,
-  Dumbbell01Icon
-} from "@hugeicons/core-free-icons"; 
+  Dumbbell01Icon,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import {UserContext} from './../../context/UserContext';
+import { UserContext } from "./../../context/UserContext";
 import { useRouter } from "expo-router";
+import Prompt from "../../shared/Prompt";
 
 export default function Preferance() {
-  const [weight,setWeight] = useState();
-  const [height,setHeight] = useState();
-  const [gender,setGender] = useState();
-  const [goal,setGoal] = useState();
+  const [weight, setWeight] = useState();
+  const [height, setHeight] = useState();
+  const [gender, setGender] = useState();
+  const [goal, setGoal] = useState();
   const UpdateUserPref = useMutation(api.Users.UpdateUserPref);
-  const {user, setUser} =  useContext(UserContext)
-  const router  = useRouter()
+  const { user, setUser } = useContext(UserContext);
+  const router = useRouter();
 
-  const onContinue = async() =>{
-    if(!weight || !height || !gender || !goal){
+  const onContinue = async () => {
+    console.log("Clicked continue");
+
+    if (!weight || !height || !gender || !goal) {
       Alert.alert(
         "Incomplete Information",
         "Please fill in your weight, height, gender, and goal before continuing."
       );
-      return
+      return;
     }
 
     const data = {
       uid: user?._id,
       height: parseFloat(height),
       weight: parseFloat(weight),
-      gender:gender,
-      goal:goal
+      gender: gender,
+      goal: goal,
+      age: 23,
     };
+
+    const PROMPT = JSON.stringify(data) + Prompt.CALORIES_PROMPT;
+    try {
+      const AIResult = await CalculateCaloriesAI(PROMPT);
+      const AIResponse = AIResult.choices[0].message.content;
+      const JSONContent = JSON.parse(
+        AIResponse.replace("```json", "").replace("```", "")
+      );
+      console.log(JSONContent);
+    } catch (error) {
+      console.log("Error in AI calculation:", error);
+    }
+
     const result = await UpdateUserPref({
-      ...data
-    })
+      ...data,
+    });
 
-    setUser(prev=>({
+    setUser((prev) => ({
       ...prev,
-      ...data
-    }))
+      ...data,
+    }));
 
-    router.replace('/(tabs)/Home')
-  }
+    router.replace("/(tabs)/Home");
+  };
 
   return (
     <View
