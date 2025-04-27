@@ -19,6 +19,7 @@
     "@hugeicons/core-free-icons": "^1.0.13",
     "@hugeicons/react-native": "^1.0.7",
     "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/slider": "^4.5.6",
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "convex": "^1.23.0",
@@ -35,6 +36,7 @@
     "expo-system-ui": "~4.0.9",
     "expo-web-browser": "~14.0.2",
     "firebase": "^11.6.0",
+    "lottie-react-native": "^7.2.2",
     "openai": "^4.96.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
@@ -45,7 +47,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "15.8.0",
     "react-native-web": "~0.19.13",
-    "react-native-webview": "13.12.5"
+    "react-native-webview": "13.12.5",
+    "react-native-wheel-picker-expo": "^0.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

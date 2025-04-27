@@ -11,7 +11,11 @@ export default defineSchema({
     height: v.optional(v.float64()),
     weight: v.optional(v.float64()),
     gender: v.optional(v.string()),
+    age: v.optional(v.float64()),
     goal: v.optional(v.string()),
+    foodType: v.optional(v.string()),
+    medicalCondition: v.optional(v.string()),
+    activityLevel: v.optional(v.string()),
   }),
   NutritionProfile: defineTable({
     userId: v.id("Users"),
@@ -22,6 +26,6 @@ export default defineSchema({
     carbs: v.float64(),
     fats: v.float64(),
     proteins: v.float64(),
-    createdAt: v.int64(), // Timestamp to know when this was calculated
+    createdAt: v.number(), // Timestamp to know when this was calculated
   }),
 });

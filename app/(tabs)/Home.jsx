@@ -7,7 +7,7 @@ export default function Home() {
   const { user } = useContext(UserContext);
   const router = useRouter();
   useEffect(() => {
-    if (!user?.weigth) {
+    if (!user?.weigt) {
       router.replace("/preferance");
     }
   }, [user]);
