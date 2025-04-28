@@ -41,3 +41,13 @@ export const GetLatestNutritionProfile = query({
     return profiles[0] ?? null; // return latest profile or null
   },
 });
+
+export const getByUserId = query({
+  args: { userId: v.id("Users") },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("NutritionProfile")
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .first();
+  },
+});
