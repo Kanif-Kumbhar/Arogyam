@@ -28,4 +28,10 @@ export default defineSchema({
     proteins: v.float64(),
     createdAt: v.number(), // Timestamp to know when this was calculated
   }),
+  Recipes: defineTable({
+    recipeName: v.string(),
+    jsonData: v.any(),
+    imageUrl: v.optional(v.string()),
+    uid: v.id("Users"),
+  }),
 });
