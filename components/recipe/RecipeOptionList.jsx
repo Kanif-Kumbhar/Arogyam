@@ -7,63 +7,68 @@ import Loader from "./../../components/shared/Loader";
 import { api } from "../../convex/_generated/api";
 import { useMutation } from 'convex/react';
 import { UserContext } from '../../context/UserContext';
+import { useRouter } from "expo-router";
 
+export default function RecipeOptionList({ recipeOption }) {
+  const [imageUrl, setImageUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
-export default function RecipeOptionList({recipeOption}) {
-    const [imageUrl, setImageUrl] = useState('');
-    const [loading, setLoading] = useState(false)
+  const { user } = useContext(UserContext);
+  const CreateRecipe = useMutation(api.Recipes.CreateRecipe);
+  const router = useRouter();
 
-    const { user } = useContext(UserContext);
-    const CreateRecipe = useMutation(api.Recipes.CreateRecipe);
+  const onRecipeOptionSelect = async (recipe) => {
+    setLoading(true);
+    const PROMPT =
+      "Recipe Name: " +
+      recipe?.recipeName +
+      " Description: " +
+      recipe?.description +
+      Prompt.GENERATE_COMPLETE_RECIPE_PROMPT;
 
-    const onRecipeOptionSelect = async (recipe) => {
-      setLoading(true);
-      const PROMPT =
-        "Recipe Name: " +
-        recipe?.recipeName +
-        " Description: " +
-        recipe?.description +
-        Prompt.GENERATE_COMPLETE_RECIPE_PROMPT;
+    try {
+      // const result = await GenerateRecipeAI(PROMPT);
+      // const extratedJSON = result.choices[0].message.content
+      //   .replace("```json", "")
+      //   .replace("```", "");
+      // const parsedJSON = JSON.parse(extratedJSON);
 
-      try {
-        const result = await GenerateRecipeAI(PROMPT);
-        const extratedJSON = result.choices[0].message.content
-          .replace("```json", "")
-          .replace("```", "");
-        const parsedJSON = JSON.parse(extratedJSON);
+      // ✅ Generate recipe image directly here
 
-        // ✅ Generate recipe image directly here
+      // You can continue with saving to DB or navigating to detail screen here
+      // const saveRecipeResult = await CreateRecipe({
+      //   imageUrl: parsedJSON?.imageUrl,
+      //   jsonData: parsedJSON,
+      //   recipeName: recipe?.recipeName,
+      //   uid: user?._id,
+      // });
 
-        // You can continue with saving to DB or navigating to detail screen here
-        const saveRecipeResult = await CreateRecipe({
-          imageUrl: parsedJSON?.imageUrl,
-          jsonData: parsedJSON,
-          recipeName: recipe?.recipeName,
-          uid: user?._id,
-        });
-        
-      } catch (error) {
-        console.log(error);
-      }
+      const saveRecipeResult = "jn79xbdyf2yx6vyrfp66718c5h7fda7f"; // For testing purpose
+      router.push({
+        pathname: "/recipe-detail",
+        params: { recipeId: saveRecipeResult },
+      });
+    } catch (error) {
+      console.log(error);
+    }
 
-      setLoading(false);
-    };
+    setLoading(false);
+  };
 
-
-        const LoaderModal = ({ visible }) => {
-            return (
-              <Modal
-                visible={visible}
-                transparent
-                animationType="fade"
-                statusBarTranslucent
-              >
-                <View style={styles.overlay}>
-                  <Loader />
-                </View>
-              </Modal>
-            );
-          };
+  const LoaderModal = ({ visible }) => {
+    return (
+      <Modal
+        visible={visible}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+      >
+        <View style={styles.overlay}>
+          <Loader />
+        </View>
+      </Modal>
+    );
+  };
 
   return (
     <View
@@ -112,7 +117,7 @@ export default function RecipeOptionList({recipeOption}) {
       <LoaderModal visible={loading} />
 
       <View>
-          <LoaderModal visible={loading} />
+        <LoaderModal visible={loading} />
       </View>
     </View>
   );

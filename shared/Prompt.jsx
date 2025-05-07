@@ -1,5 +1,5 @@
 export default {
-  CALORIES_PROMPT: `You are a certified nutritionist.
+	CALORIES_PROMPT: `You are a certified nutritionist.
 
 Based on the user's:
 - Age
@@ -28,7 +28,7 @@ Notes:
 - Units: kcal for calories, grams for macros.
 - Again, ONLY return the JSON, no explanation or formatting.`,
 
-  GENERATE_RECIPE_OPTION_PROMPT: `You are an expert chef and certified nutritionist.
+	GENERATE_RECIPE_OPTION_PROMPT: `You are an expert chef and certified nutritionist.
 
 Based on the user's:
 - Food Type: Satvik / Rajsik / Tamsik
@@ -53,10 +53,10 @@ Notes:
 - Do NOT include ingredient quantities or measurements.
 - Ensure recipes align with any mentioned medical conditions.
 - If no medical condition is provided, generate general healthy recipes.
-- Keep descriptions brief and appealing.
+- Keep description brief and appealing.
 - Output ONLY the JSON. No extra text or explanations.`,
 
-  GENERATE_COMPLETE_RECIPE_PROMPT: `You are a professional chef and nutritionist assistant. Given the recipe name and its description, generate a complete recipe in strict JSON format using the following schema. Output only the JSON, without any extra text or explanation.
+	GENERATE_COMPLETE_RECIPE_PROMPT: `You are a professional chef and nutritionist assistant. Given the recipe name and its description, generate a complete recipe in strict JSON format using the following schema. Output only the JSON, without any extra text or explanation.
 
 SCHEMA:
 {
@@ -74,7 +74,7 @@ SCHEMA:
     }
   ],
   "serveTo": number,
-  "steps": string
+  "steps": [string]
 }
 
 RULES:

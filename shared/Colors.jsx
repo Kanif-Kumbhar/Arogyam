@@ -20,4 +20,6 @@ export default {
 
   LIGHTPINK: "#F8C8D8",
   LIGHTBLUE: "#B3D7FF",
+
+  SECONDARY: '#fbf5ff',
 };
