@@ -1,5 +1,11 @@
 import { View, Text, Platform, FlatList } from "react-native";
-import React from "react";
+import ActionSheet, {
+	SheetManager,
+	SheetProps,
+	registerSheet,
+} from "react-native-actions-sheet";
+
+import React, { useRef } from "react";
 import RecipeIntro from "../../components/recipeDetail/RecipeIntro";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useQuery } from "convex/react";
@@ -8,6 +14,7 @@ import Colors from "../../shared/Colors";
 import RecipeIngredients from "../../components/recipeDetail/RecipeIngredients";
 import RecipeSteps from "../../components/recipeDetail/RecipeSteps";
 import Button from "./../../components/shared/Button";
+import AddToMealActionSheet from "../../components/actionSheets/AddToMealActionSheet";
 
 export default function RecipeDetail() {
 	const { recipeId } = useLocalSearchParams();
@@ -16,6 +23,7 @@ export default function RecipeDetail() {
 		id: recipeId == undefined ? "jn79xbdyf2yx6vyrfp66718c5h7fda7f" : recipeId,
 	});
 
+	const actionSheetRef = useRef(null);
 	return (
 		<FlatList
 			data={[]}
@@ -38,14 +46,23 @@ export default function RecipeDetail() {
 					{/* Cooking Steps */}
 					<RecipeSteps recipeDetail={recipeDetails} />
 
-          <View style={{
-            marginTop: 10,
+					<View
+						style={{
+							marginTop: 10,
+						}}
+					>
+						<Button
+							title={"Add to Meal Plan"}
+							onPress={() => actionSheetRef.current.show()}
+						/>
+					</View>
 
-          }}>
-            <Button title={'Add to Meal Plan'}/>
-          </View>
+					<ActionSheet ref={actionSheetRef}>
+						<AddToMealActionSheet recipeDetail={recipeDetails} 
+						hideActionSheet={() => actionSheetRef.current.hide()}/>
+					</ActionSheet>
 				</View>
 			}
 		/>
-	)
+	);
 }
