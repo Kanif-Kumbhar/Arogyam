@@ -39,5 +39,7 @@ export default defineSchema({
 		date: v.string(),
 		mealType: v.string(), // breakfast, lunch, dinner
 		userId: v.id("Users"),
+		status: v.optional(v.boolean(false)), // created, completed
+		calories: v.optional(v.number()),
 	}),
 });

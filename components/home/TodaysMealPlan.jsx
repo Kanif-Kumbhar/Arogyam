@@ -8,16 +8,18 @@ import { useConvex } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import moment from "moment";
 import { UserContext } from "../../context/UserContext";
+import { RefreshDataContext } from "../../context/RefreshDataContext";
 import MealPlanCard from "./MealPlanCard";
 
 export default function TodaysMealPlan() {
 	const [mealPlan, setMealPlan] = useState();
 	const convex = useConvex();
 	const { user } = useContext(UserContext);
+	const { refreshData, setRefreshDate } = useContext(RefreshDataContext);
 
 	useEffect(() => {
 		user && GetTodayMealPlan();
-	}, [user]);
+	}, [user, refreshData]);
 
 	const GetTodayMealPlan = async () => {
 		const result = await convex.query(api.MealPlan.GetTodayMealPlan, {
