@@ -1,10 +1,5 @@
 import { View, Text, Platform, FlatList } from "react-native";
-import ActionSheet, {
-	SheetManager,
-	SheetProps,
-	registerSheet,
-} from "react-native-actions-sheet";
-
+import ActionSheet from "react-native-actions-sheet";
 import React, { useRef } from "react";
 import RecipeIntro from "../../components/recipeDetail/RecipeIntro";
 import { useLocalSearchParams } from "expo-router/build/hooks";

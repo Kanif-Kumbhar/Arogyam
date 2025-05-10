@@ -1,20 +1,26 @@
 import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
-import moment from 'moment';
+import React, { useContext, useEffect, useState } from "react";
 import Colors from "../../shared/Colors";
-import { Coffee02FreeIcons, Moon02FreeIcons, Sun03FreeIcons } from '@hugeicons/core-free-icons';
+import {
+	Coffee02FreeIcons,
+	Moon02FreeIcons,
+	Sun03FreeIcons,
+} from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import Button from "./../../components/shared/Button";
-import { useMutation } from 'convex/react';
+import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from "../../context/UserContext";
+import DateSelectionCard from "../shared/DateSelectionCard";
 
-export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) {
-	const [dateList, setDateList] = useState([]);
+export default function AddToMealActionSheet({
+	recipeDetail,
+	hideActionSheet,
+}) {
 	const [selectedDate, setSelectedDate] = useState();
 	const [selectedMeal, setSelectedMeal] = useState();
-	const CreateMealPlan = useMutation(api.MealPlan.CreateMealPlan)
-	const {user} = useContext(UserContext)
+	const CreateMealPlan = useMutation(api.MealPlan.CreateMealPlan);
+	const { user } = useContext(UserContext);
 	const mealOptions = [
 		{
 			title: "Breakfast",
@@ -30,23 +36,9 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
 		},
 	];
 
-	useEffect(() => {
-		GenerateDates();
-	}, []);
-
-	const GenerateDates = () => {
-		const result = [];
-		for (let i = 0; i < 4; i++) {
-			const nextDate = moment().add(i, "days").format("DD-MM-YYYY");
-			result.push(nextDate);
-		}
-
-		setDateList(result);
-	};
-
 	const AddToMealPlan = async () => {
-		if(!selectedDate || !selectedMeal) {
-			Alert.alert('Error!', 'Please select a date and meal type.');
+		if (!selectedDate || !selectedMeal) {
+			Alert.alert("Error!", "Please select a date and meal type.");
 			return;
 		}
 		const result = await CreateMealPlan({
@@ -56,7 +48,7 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
 			userId: user?._id,
 		});
 		hideActionSheet();
-	}
+	};
 
 	return (
 		<View
@@ -74,66 +66,11 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
 				Add to Meal Plan
 			</Text>
 
-			<Text
-				style={{
-					fontSize: 20,
-					fontWeight: "500",
-					marginTop: 15,
-				}}
-			>
-				Select Date
-			</Text>
-
-			<FlatList
-				data={dateList}
-				numColumns={4}
-				renderItem={({ item, index }) => (
-					<TouchableOpacity
-						onPress={() => {
-							setSelectedDate(item);
-						}}
-						style={{
-							display: "flex",
-							flex: 1,
-							alignItems: "center",
-							padding: 7,
-							borderWidth: selectedDate === item ? 2 : 1,
-							borderRadius: 10,
-							margin: 5,
-							backgroundColor:
-								selectedDate === item ? Colors.SECONDARY : Colors.WHITE,
-							borderColor: selectedDate === item ? Colors.PRIMARY : Colors.GRAY,
-						}}
-					>
-						<Text
-							style={{
-								fontSize: 18,
-								fontWeight: "450",
-							}}
-						>
-							{" "}
-							{moment(item, "DD/MM/YYYY").format("ddd")}{" "}
-						</Text>
-						<Text
-							style={{
-								fontSize: 20,
-								fontWeight: "bold",
-							}}
-						>
-							{" "}
-							{moment(item, "DD/MM/YYYY").format("DD")}{" "}
-						</Text>
-						<Text
-							style={{
-								fontSize: 16,
-							}}
-						>
-							{" "}
-							{moment(item, "DD/MM/YYYY").format("MMM")}{" "}
-						</Text>
-					</TouchableOpacity>
-				)}
+			<DateSelectionCard
+				setSelectedDate={setSelectedDate}
+				selectedDate={selectedDate}
 			/>
+
 			<Text
 				style={{
 					fontSize: 20,
@@ -188,7 +125,7 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
 					marginTop: 15,
 				}}
 			>
-				<Button title="+ Add to Meal Plan" onPress={AddToMealPlan}/>
+				<Button title="+ Add to Meal Plan" onPress={AddToMealPlan} />
 				<TouchableOpacity
 					onPress={() => hideActionSheet()}
 					style={{ padding: 15 }}

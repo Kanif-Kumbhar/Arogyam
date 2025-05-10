@@ -11,12 +11,12 @@ import { UserContext } from "../../context/UserContext";
 import { RefreshDataContext } from "../../context/RefreshDataContext";
 import MealPlanCard from "./MealPlanCard";
 
-export default function TodaysMealPlan() {
+export default function TodaysMealPlan({ selectedDate = null }) {
 	const [mealPlan, setMealPlan] = useState();
 	const convex = useConvex();
 	const { user } = useContext(UserContext);
 	const { refreshData, setRefreshDate } = useContext(RefreshDataContext);
-
+	console.log("selectedDate", selectedDate);
 	useEffect(() => {
 		user && GetTodayMealPlan();
 	}, [user, refreshData]);
@@ -24,7 +24,7 @@ export default function TodaysMealPlan() {
 	const GetTodayMealPlan = async () => {
 		const result = await convex.query(api.MealPlan.GetTodayMealPlan, {
 			userId: user?._id,
-			date: moment().format("DD-MM-YYYY"),
+			date: selectedDate ?? moment().format("DD-MM-YYYY"),
 		});
 		setMealPlan(result);
 	};
@@ -35,14 +35,16 @@ export default function TodaysMealPlan() {
 				marginTop: 15,
 			}}
 		>
-			<Text
-				style={{
-					fontSize: 20,
-					fontWeight: "bold",
-				}}
-			>
-				Today's Meal Plan
-			</Text>
+			{!selectedDate && (
+				<Text
+					style={{
+						fontSize: 20,
+						fontWeight: "bold",
+					}}
+				>
+					Today's Meal Plan
+				</Text>
+			)}
 
 			{!mealPlan ? (
 				<View
