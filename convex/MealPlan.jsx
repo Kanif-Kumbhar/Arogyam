@@ -30,7 +30,11 @@ export const GetTodayMealPlan = query({
 			.filter((q) =>
 				q.and(
 					q.eq(q.field("userId"), args.userId),
-					q.eq(q.field("date"), args.date)
+					q.eq(q.field("date"), args.date),
+					q.or(
+						q.eq(q.field("status"), false),
+						q.not(q.field("status")) // handles undefined/null
+					)
 				)
 			)
 			.collect();
@@ -44,9 +48,11 @@ export const GetTodayMealPlan = query({
 				};
 			})
 		);
+
 		return result;
 	},
 });
+
 
 export const UpdateStatus = mutation({
 	args: {

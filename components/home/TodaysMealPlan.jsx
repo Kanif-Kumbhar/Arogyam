@@ -16,6 +16,7 @@ export default function TodaysMealPlan({ selectedDate = null }) {
 	const convex = useConvex();
 	const { user } = useContext(UserContext);
 	const { refreshData, setRefreshDate } = useContext(RefreshDataContext);
+
 	useEffect(() => {
 		user && GetTodayMealPlan();
 	}, [user, refreshData]);
@@ -45,7 +46,7 @@ export default function TodaysMealPlan({ selectedDate = null }) {
 				</Text>
 			)}
 
-			{!mealPlan ? (
+			{mealPlan?.length === 0 ? (
 				<View
 					style={{
 						display: "flex",

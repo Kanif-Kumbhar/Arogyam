@@ -1,5 +1,5 @@
-import { View, Text } from 'react-native'
-import React, { useContext, useEffect, useState } from "react";
+import { View, Text, Animated } from "react-native";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import moment from "moment";
 import Colors from "./../../shared/Colors";
 import { UserContext } from "./../../context/UserContext";
@@ -11,11 +11,14 @@ export default function TodayProgress() {
 	const { user } = useContext(UserContext);
 	const convex = useConvex();
 	const [totalCaloriesConsumed, setTotalCaloriesConsumed] = useState(0);
+	const { refreshData } = useContext(RefreshDataContext);
 
-	const { refreshData, setRefreshDate } = useContext(RefreshDataContext);
+	const progressAnim = useRef(new Animated.Value(0)).current;
 
 	useEffect(() => {
-		user && GetTotalCaloriesConsume();
+		if (user) {
+			GetTotalCaloriesConsume();
+		}
 	}, [user, refreshData]);
 
 	const GetTotalCaloriesConsume = async () => {
@@ -29,6 +32,40 @@ export default function TodayProgress() {
 	const data = useQuery(api.NutritionProfile.GetLatestNutritionProfile, {
 		userId: user?._id,
 	});
+
+	// Animate progress bar when values change
+	useEffect(() => {
+		if (data?.calories > 0) {
+			const progressPercent = Math.min(
+				totalCaloriesConsumed / data.calories,
+				1
+			);
+			Animated.timing(progressAnim, {
+				toValue: progressPercent,
+				duration: 500,
+				useNativeDriver: false,
+			}).start();
+		}
+	}, [totalCaloriesConsumed, data?.calories]);
+
+	const animatedWidth = progressAnim.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0%", "100%"],
+	});
+
+	const progressMessages = [
+		{ max: 0, message: "Let's get started!" },
+		{ max: 0.5, message: "You're off to a good start!" },
+		{ max: 0.9, message: "You're doing great!" },
+		{ max: 1, message: "Almost there, keep it up!" },
+		{ max: Infinity, message: "Goal achieved! Great job!" },
+	];
+
+	function getProgressMessage(progressPercent) {
+		const entry = progressMessages.find(({ max }) => progressPercent <= max);
+		return entry ? entry.message : "";
+	}
+
 	return (
 		<View
 			style={{
@@ -40,22 +77,15 @@ export default function TodayProgress() {
 		>
 			<View
 				style={{
-					display: "flex",
 					flexDirection: "row",
 					justifyContent: "space-between",
 					alignItems: "center",
 				}}
 			>
-				<Text
-					style={{
-						fontSize: 20,
-						fontWeight: "bold",
-					}}
-				>
-					Today's Goal{" "}
-				</Text>
+				<Text style={{ fontSize: 20, fontWeight: "bold" }}>Today's Goal</Text>
 				<Text style={{ fontSize: 18 }}>{moment().format("MMM DD, YYYY")}</Text>
 			</View>
+
 			<Text
 				style={{
 					fontSize: 30,
@@ -65,46 +95,46 @@ export default function TodayProgress() {
 					color: Colors.PRIMARY,
 				}}
 			>
-				{totalCaloriesConsumed}/{data?.calories} kcal
-			</Text>
-			<Text
-				style={{
-					textAlign: "center",
-					marginTop: 2,
-					fontSize: 16,
-				}}
-			>
-				You're doing great!
+				{totalCaloriesConsumed}/{data?.calories ?? "..."} kcal
 			</Text>
 
+			<Text style={{ textAlign: "center", marginTop: 2, fontSize: 16 }}>
+				{getProgressMessage(
+					data?.calories > 0
+						? Math.min(totalCaloriesConsumed / data.calories, 1)
+						: 0
+				)}
+			</Text>
+
+			{/* Progress Bar */}
 			<View
 				style={{
 					backgroundColor: Colors.GRAY,
 					height: 10,
 					borderRadius: 99,
-					marginTop: 15,
+					marginTop: 10,
 					opacity: 0.7,
+					overflow: "hidden",
 				}}
 			>
-				<View
+				<Animated.View
 					style={{
 						backgroundColor: Colors.PRIMARY,
-						width: "40%",
 						height: 10,
 						borderRadius: 99,
+						width: animatedWidth,
 					}}
-				></View>
+				/>
 			</View>
+
 			<View
 				style={{
-					display: "flex",
 					flexDirection: "row",
 					justifyContent: "space-between",
 					marginTop: 5,
 				}}
 			>
-				<Text>Calories Consumes</Text>
-				<Text>Keep it up!</Text>
+				<Text>Calories Consumed</Text>
 			</View>
 		</View>
 	);
