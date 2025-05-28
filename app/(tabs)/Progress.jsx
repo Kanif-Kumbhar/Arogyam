@@ -1,11 +1,15 @@
 import { View, Text, Platform, FlatList } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import DateSelectionCard from "../../components/shared/DateSelectionCard";
-import TodaysMealPlan from "../../components/home/TodaysMealPlan";
-import TodayProgress from "../../components/home/TodayProgress";
+import TodayNutritionIntake from "../../components/progress/TodayNutritionIntake";
+import moment from "moment";
+import { UserContext } from "./../../context/UserContext";
 
 export default function Progress() {
-	const [selectedDate, setSelectedDate] = useState();
+	const [selectedDate, setSelectedDate] = useState(
+		moment().format("DD-MM-YYYY")
+	);
+	const { user } = useContext(UserContext);
 
 	return (
 		<FlatList
@@ -28,8 +32,7 @@ export default function Progress() {
 					</Text>
 
 					<DateSelectionCard setSelectedDate={setSelectedDate} />
-					<TodaysMealPlan selectedDate={selectedDate} />
-					<TodayProgress />
+					<TodayNutritionIntake userId={user._id} />
 				</View>
 			}
 		/>

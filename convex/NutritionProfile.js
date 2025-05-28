@@ -38,7 +38,7 @@ export const GetLatestNutritionProfile = query({
       .filter((q) => q.eq(q.field("userId"), args.userId))
       .order("desc")
       .collect();
-    return profiles[0] ?? null; // return latest profile or null
+    return profiles[0] ?? null;
   },
 });
 

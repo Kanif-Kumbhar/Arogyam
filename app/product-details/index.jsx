@@ -29,7 +29,7 @@ export default function ProductDetails() {
 		const fetchProductDetails = async () => {
 			try {
 				const response = await fetch(
-					`https://world.openfoodfacts.org/api/v2/product/${8901491100519}`
+					`https://world.openfoodfacts.org/api/v2/product/${code}`
 				);
 				const json = await response.json();
 				if (json.status === 1) {

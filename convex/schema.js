@@ -41,5 +41,8 @@ export default defineSchema({
 		userId: v.id("Users"),
 		status: v.optional(v.boolean(false)), // created, completed
 		calories: v.optional(v.number()),
+		fats: v.optional(v.number()),
+		carbs: v.optional(v.number()),
+		proteins: v.optional(v.number()),
 	}),
 });

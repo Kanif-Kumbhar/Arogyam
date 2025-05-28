@@ -55,6 +55,7 @@ export default function TodaysMealPlan({ selectedDate = null }) {
 						backgroundColor: Colors.WHITE,
 						marginTop: 15,
 						borderRadius: 15,
+						elevation: 5,
 					}}
 				>
 					<HugeiconsIcon

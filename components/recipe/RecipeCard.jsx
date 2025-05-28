@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.WHITE,
 		borderRadius: 15,
 		overflow: "hidden",
+		elevation: 5,
 	},
 	cardImage: {
 		width: "100%",

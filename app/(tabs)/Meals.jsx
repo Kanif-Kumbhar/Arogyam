@@ -9,34 +9,39 @@ export default function Meals() {
 	const recipeList = useQuery(api.Recipes.GetAllRecipes);
 
 	return (
-    <FlatList
-      data ={[]}
-      renderItem = {() => null}
-      ListHeaderComponent={
-		<View
-			style={{
-				padding: 20,
-				paddingTop: Platform.OS == "ios" ? 40 : 30,
-			}}
-		>
-			<Text
-				style={{
-					fontSize: 30,
-					fontWeight: "bold",
-				}}
-			>
-				Discover Recipes
-			</Text>
-			<GenerateRecipeCard />
+		<FlatList
+			data={[]}
+			renderItem={() => null}
+			ListHeaderComponent={
+				<View
+					style={{
+						padding: 20,
+						paddingTop: Platform.OS == "ios" ? 40 : 30,
+					}}
+				>
+					<Text
+						style={{
+							fontSize: 30,
+							fontWeight: "bold",
+						}}
+					>
+						Discover Recipes
+					</Text>
+					<GenerateRecipeCard />
 
-			<View>
-				<FlatList
-					data={recipeList}
-					numColumns={2}
-					renderItem={({ item }) => <RecipeCard recipe={item} />}
-				/>
-			</View>
-		</View>}
-    />
+					<View
+						style={{
+							marginTop: 5,
+						}}
+					>
+						<FlatList
+							data={recipeList}
+							numColumns={2}
+							renderItem={({ item }) => <RecipeCard recipe={item} />}
+						/>
+					</View>
+				</View>
+			}
+		/>
 	);
 }

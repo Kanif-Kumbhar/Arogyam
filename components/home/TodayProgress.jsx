@@ -73,6 +73,7 @@ export default function TodayProgress() {
 				padding: 15,
 				backgroundColor: Colors.WHITE,
 				borderRadius: 10,
+				elevation: 5,
 			}}
 		>
 			<View

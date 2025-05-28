@@ -12,11 +12,20 @@ const QRScanner = () => {
 	const [scannedData, setScannedData] = useState(null);
 	const router = useRouter();
 
+	useEffect(() => {
+		if (scannedData) {
+			router.push({
+				pathname: "/product-details",
+				params: { code: scannedData },
+			});
+		}
+	}, [scannedData]);
+
 	// Load and play beep sound
 	const playBeep = async () => {
 		try {
 			const { sound } = await Audio.Sound.createAsync(
-				require("../../assets/sounds/beep.mp3") // Add your beep mp3 in assets folder
+				require("../../assets/sounds/beep.mp3")
 			);
 			await sound.playAsync();
 			// Unload sound after playing to free resources
@@ -49,9 +58,9 @@ const QRScanner = () => {
 			setScannedData(data);
 			playBeep();
 			setTimeout(() => setScanned(false), 3000);
-			handleNavigate();
 		}
 	};
+	
 
 	const handleNavigate = () => {
 		if (scannedData) {
