@@ -3,21 +3,30 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import Colors from "../../shared/Colors";
 
-export default function DateSelectionCard({ setSelectedDate}) {
+export default function DateSelectionCard({
+	setSelectedDate,
+	reverse = false,
+}) {
 	const [dateList, setDateList] = useState([]);
 	const [selectedDate_, setSelectedDate_] = useState();
 
 	useEffect(() => {
 		GenerateDates();
-	}, []);
+	}, [reverse]);
 
 	const GenerateDates = () => {
 		const result = [];
-		for (let i = 0; i < 4; i++) {
-			const nextDate = moment().add(i, "days").format("DD-MM-YYYY");
-			result.push(nextDate);
+		if (reverse) {
+			for (let i = 3; i >= 0; i--) {
+				const prevDate = moment().subtract(i, "days").format("DD-MM-YYYY");
+				result.push(prevDate);
+			}
+		} else {
+			for (let i = 0; i < 4; i++) {
+				const nextDate = moment().add(i, "days").format("DD-MM-YYYY");
+				result.push(nextDate);
+			}
 		}
-
 		setDateList(result);
 	};
 
@@ -36,6 +45,7 @@ export default function DateSelectionCard({ setSelectedDate}) {
 			<FlatList
 				data={dateList}
 				numColumns={4}
+				keyExtractor={(item) => item}
 				renderItem={({ item }) => (
 					<TouchableOpacity
 						onPress={() => {
@@ -52,7 +62,8 @@ export default function DateSelectionCard({ setSelectedDate}) {
 							margin: 5,
 							backgroundColor:
 								selectedDate_ === item ? Colors.SECONDARY : Colors.WHITE,
-							borderColor: selectedDate_ === item ? Colors.PRIMARY : Colors.GRAY,
+							borderColor:
+								selectedDate_ === item ? Colors.PRIMARY : Colors.GRAY,
 						}}
 					>
 						<Text
@@ -61,8 +72,7 @@ export default function DateSelectionCard({ setSelectedDate}) {
 								fontWeight: "450",
 							}}
 						>
-							{" "}
-							{moment(item, "DD/MM/YYYY").format("ddd")}{" "}
+							{moment(item, "DD-MM-YYYY").format("ddd")}
 						</Text>
 						<Text
 							style={{
@@ -70,16 +80,14 @@ export default function DateSelectionCard({ setSelectedDate}) {
 								fontWeight: "bold",
 							}}
 						>
-							{" "}
-							{moment(item, "DD/MM/YYYY").format("DD")}{" "}
+							{moment(item, "DD-MM-YYYY").format("DD")}
 						</Text>
 						<Text
 							style={{
 								fontSize: 16,
 							}}
 						>
-							{" "}
-							{moment(item, "DD/MM/YYYY").format("MMM")}{" "}
+							{moment(item, "DD-MM-YYYY").format("MMM")}
 						</Text>
 					</TouchableOpacity>
 				)}

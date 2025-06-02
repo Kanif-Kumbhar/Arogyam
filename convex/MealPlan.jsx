@@ -31,10 +31,7 @@ export const GetTodayMealPlan = query({
 				q.and(
 					q.eq(q.field("userId"), args.userId),
 					q.eq(q.field("date"), args.date),
-					q.or(
-						q.eq(q.field("status"), false),
-						q.not(q.field("status")) // handles undefined/null
-					)
+					q.not(q.eq(q.field("status"), true)) // <= fixed here
 				)
 			)
 			.collect();
@@ -53,17 +50,22 @@ export const GetTodayMealPlan = query({
 	},
 });
 
-
 export const UpdateStatus = mutation({
 	args: {
 		id: v.id("MealPlan"),
 		status: v.boolean(),
 		calories: v.number(),
+		proteins: v.number(),
+		fats: v.number(),
+		carbs: v.number(),
 	},
 	handler: async (ctx, args) => {
 		const result = await ctx.db.patch(args.id, {
 			status: args.status,
 			calories: args.calories,
+			proteins: args.proteins,
+			fats: args.fats,
+			carbs: args.carbs,
 		});
 	},
 });
@@ -91,3 +93,65 @@ export const GetTotalCaloriesConsume = query({
 		return totalCalories;
 	},
 });
+
+export const GetTotalNutritionConsume = query({
+	args: {
+		date: v.string(),
+		userId: v.id("Users"),
+	},
+	handler: async (ctx, args) => {
+		const mealPlanResult = await ctx.db
+			.query("MealPlan")
+			.filter((q) =>
+				q.and(
+					q.eq(q.field("userId"), args.userId),
+					q.eq(q.field("date"), args.date),
+					q.eq(q.field("status"), true)
+				)
+			)
+			.collect();
+
+		const totalNutrition = mealPlanResult.reduce(
+			(totals, meal) => {
+				totals.calories += meal.calories ?? 0;
+				totals.proteins += meal.proteins ?? 0;
+				totals.carbs += meal.carbs ?? 0;
+				totals.fats += meal.fats ?? 0;
+				return totals;
+			},
+			{ calories: 0, proteins: 0, carbs: 0, fats: 0 }
+		);
+
+		return totalNutrition;
+	},
+});
+
+export const GetFavouriteRecipe = query({
+	args: {
+		userId: v.id("Users"),
+	},
+	handler: async (ctx, { userId }) => {
+		const mealPlans = await ctx.db
+			.query("MealPlan")
+			.filter((q) => q.eq(q.field("userId"), userId))
+			.collect();
+
+		const recipeCount = {};
+
+		for (const plan of mealPlans) {
+			const id = plan.recipeId;
+			recipeCount[id] = (recipeCount[id] || 0) + 1;
+		}
+
+		const sortedEntries = Object.entries(recipeCount).sort(
+			(a, b) => b[1] - a[1]
+		);
+		const mostMadeId = sortedEntries.length > 0 ? sortedEntries[0][0] : null;
+
+		if (!mostMadeId) return null;
+
+		const recipe = await ctx.db.get(mostMadeId);
+
+		return recipe;
+	},
+});  

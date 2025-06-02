@@ -4,6 +4,7 @@ import DateSelectionCard from "../../components/shared/DateSelectionCard";
 import TodayNutritionIntake from "../../components/progress/TodayNutritionIntake";
 import moment from "moment";
 import { UserContext } from "./../../context/UserContext";
+import FavouriteRecipe from "../../components/progress/FavouriteRecipe";
 
 export default function Progress() {
 	const [selectedDate, setSelectedDate] = useState(
@@ -31,8 +32,9 @@ export default function Progress() {
 						Progress
 					</Text>
 
-					<DateSelectionCard setSelectedDate={setSelectedDate} />
-					<TodayNutritionIntake userId={user._id} />
+					<DateSelectionCard setSelectedDate={setSelectedDate} reverse={true} />
+					<FavouriteRecipe userId={user._id} />
+					<TodayNutritionIntake userId={user._id} selectedDate={selectedDate} />
 				</View>
 			}
 		/>

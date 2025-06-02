@@ -1,28 +1,41 @@
-import { View, Text,Image, StyleSheet } from 'react-native'
+import { View, Text, Image, StyleSheet } from "react-native";
 import { HugeiconsIcon } from "@hugeicons/react-native";
 import {
 	Fire03FreeIcons,
 	TimeQuarter02FreeIcons,
 } from "@hugeicons/core-free-icons";
-import Colors from '../../shared/Colors';
-import { Link } from 'expo-router';
+import Colors from "../../shared/Colors";
+import { Link } from "expo-router";
 
-export default function RecipeCard({ recipe }) {
+export default function RecipeCard({ recipe, fullWidth = false }) {
 	const recipeJson = recipe?.jsonData;
 
 	return (
 		<Link
 			href={"/recipe-detail?recipeId=" + recipe?._id}
 			style={{
-				flex: 1,
-				margin: 5,
+				flex: fullWidth ? undefined : 1,
+				width: fullWidth ? "100%" : undefined,
 			}}
 		>
-			<View style={styles.cardContainer}>
-				<Image source={{ uri: recipe?.imageUrl }} style={styles.cardImage} />
+			<View
+				style={[
+					styles.cardContainer,
+					fullWidth && styles.fullWidthCardContainer,
+				]}
+			>
+				<Image
+					source={{ uri: recipe?.imageUrl }}
+					style={[styles.cardImage, fullWidth && styles.fullWidthCardImage]}
+				/>
 				<View style={styles.cardContent}>
 					<Text style={styles.recipeTitle}>{recipe?.recipeName}</Text>
-					<View style={[styles.infoRow, { gap: 15, marginTop: 6 }]}>
+					<View
+						style={[
+							styles.infoRow,
+							fullWidth ? styles.infoRowFullWidth : { gap: 15, marginTop: 6 },
+						]}
+					>
 						<View style={styles.infoContainer}>
 							<HugeiconsIcon
 								icon={Fire03FreeIcons}
@@ -31,7 +44,7 @@ export default function RecipeCard({ recipe }) {
 							/>
 							<Text style={styles.infoText}>{recipeJson?.calories} kcal</Text>
 						</View>
-						<View style={styles.infoContainer}>
+						<View style={styles.infoContainerRight}>
 							<HugeiconsIcon
 								icon={TimeQuarter02FreeIcons}
 								size={18}
@@ -48,15 +61,22 @@ export default function RecipeCard({ recipe }) {
 
 const styles = StyleSheet.create({
 	cardContainer: {
-		height: 180, // total fixed height for the card
+		height: 180,
 		backgroundColor: Colors.WHITE,
 		borderRadius: 15,
 		overflow: "hidden",
 		elevation: 5,
 	},
+	fullWidthCardContainer: {
+		width: "100%",
+		height: 220,
+	},
 	cardImage: {
 		width: "100%",
 		height: 100,
+	},
+	fullWidthCardImage: {
+		height: 140,
 	},
 	cardContent: {
 		flex: 1,
@@ -70,7 +90,17 @@ const styles = StyleSheet.create({
 	infoRow: {
 		flexDirection: "row",
 	},
+	infoRowFullWidth: {
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginTop: 6,
+	},
 	infoContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		gap: 2,
+	},
+	infoContainerRight: {
 		flexDirection: "row",
 		alignItems: "center",
 		gap: 2,

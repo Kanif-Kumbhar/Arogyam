@@ -27,12 +27,19 @@ export default function MealPlanCard({ mealPlanInfo }) {
 			id: mealPlanInfo?.mealPlan?._id,
 			status: status,
 			calories: mealPlanInfo?.recipe?.jsonData?.calories,
+			proteins: mealPlanInfo?.recipe?.jsonData?.protein,
+			fats: mealPlanInfo?.recipe?.jsonData?.fats,
+			carbs: mealPlanInfo?.recipe?.jsonData?.carbs,
 		});
 		Alert.alert("Great!", "Status updated successfully");
 
 		setRefreshData(Date.now());
 	};
 
+	if (!mealPlanInfo?.recipe || !mealPlanInfo?.mealPlan) {
+		return null;
+	}
+	
 	return (
 		<View
 			style={{

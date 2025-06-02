@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -8,22 +8,39 @@ import {
 } from "react-native";
 import { ProgressChart } from "react-native-chart-kit";
 import Colors from "../../shared/Colors";
-import { useQuery } from "convex/react";
+import { useConvex, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import moment from "moment";
 
-export default function TodayNutritionIntake({ userId }) {
-	const screenWidth = Dimensions.get("window").width;
-	const chartPadding = 32;
-	const chartWidth = screenWidth - chartPadding;
+export default function TodayNutritionIntake({ userId, selectedDate }) {
+	const convex = useConvex();
 
-	const nutritionData = useQuery(
+	const dateToUse = selectedDate || moment().format("DD-MM-YYYY");
+
+	const nutritionProfile = useQuery(
 		api.NutritionProfile.GetLatestNutritionProfile,
 		{
-			userId: userId,
+			userId,
 		}
 	);
 
-	if (!nutritionData) {
+	const [todayConsumed, setTodayConsumed] = useState(null);
+
+	useEffect(() => {
+		if (!userId) return;
+
+		const fetchNutrition = async () => {
+			const result = await convex.query(api.MealPlan.GetTotalNutritionConsume, {
+				userId,
+				date: dateToUse,
+			});
+			setTodayConsumed(result);
+		};
+
+		fetchNutrition();
+	}, [userId, convex, dateToUse]);
+
+	if (!nutritionProfile || !todayConsumed) {
 		return (
 			<View style={styles.loadingContainer}>
 				<ActivityIndicator size="large" color={Colors.PRIMARY} />
@@ -32,25 +49,20 @@ export default function TodayNutritionIntake({ userId }) {
 	}
 
 	const goalValues = {
-		calories: 2000, // kcal
-		proteins: 100, // g
-		fats: 70, // g
-		carbs: 250, // g
+		calories: nutritionProfile?.calories ?? 2000,
+		proteins: nutritionProfile?.proteins ?? 100,
+		fats: nutritionProfile?.fats ?? 70,
+		carbs: nutritionProfile?.carbs ?? 250,
 	};
 
 	const dataValues = [
-		Math.min(nutritionData.calories / goalValues.calories, 1),
-		Math.min(nutritionData.proteins / goalValues.proteins, 1),
-		Math.min(nutritionData.fats / goalValues.fats, 1),
-		Math.min(nutritionData.carbs / goalValues.carbs, 1),
+		Math.min(todayConsumed.calories / goalValues.calories, 1),
+		Math.min(todayConsumed.proteins / goalValues.proteins, 1),
+		Math.min(todayConsumed.fats / goalValues.fats, 1),
+		Math.min(todayConsumed.carbs / goalValues.carbs, 1),
 	];
 
-	const labels = [
-		'Calories',
-		'Proteins',
-		'Fats',
-		'Carbs',
-	];	  
+	const labels = ["Calories", "Proteins", "Fats", "Carbs"];
 
 	const chartData = {
 		labels,
@@ -65,11 +77,13 @@ export default function TodayNutritionIntake({ userId }) {
 	};
 
 	return (
-		<View style={[styles.container, { width: chartWidth }]}>
-			<Text style={styles.heading}>Today's Nutrition Intake</Text>
+		<View
+			style={[styles.container, { width: Dimensions.get("window").width - 32 }]}
+		>
+			<Text style={styles.heading}>Nutrition Intake</Text>
 			<ProgressChart
 				data={chartData}
-				width={chartWidth}
+				width={Dimensions.get("window").width - 32}
 				height={240}
 				strokeWidth={16}
 				radius={32}
@@ -89,6 +103,7 @@ const styles = StyleSheet.create({
 		borderRadius: 16,
 		alignSelf: "center",
 		marginTop: 16,
+		elevation: 5,
 	},
 	heading: {
 		fontSize: 18,
