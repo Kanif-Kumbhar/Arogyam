@@ -27,23 +27,22 @@ export default function RecipeOptionList({ recipeOption }) {
       Prompt.GENERATE_COMPLETE_RECIPE_PROMPT;
 
     try {
-      // const result = await GenerateRecipeAI(PROMPT);
-      // const extratedJSON = result.choices[0].message.content
-      //   .replace("```json", "")
-      //   .replace("```", "");
-      // const parsedJSON = JSON.parse(extratedJSON);
+      const result = await GenerateRecipeAI(PROMPT);
+			const extratedJSON = result.choices[0].message.content
+				.replace("```json", "")
+				.replace("```", "");
+			const parsedJSON = JSON.parse(extratedJSON);
 
-      // ✅ Generate recipe image directly here
+			// ✅ Generate recipe image directly here
 
-      // You can continue with saving to DB or navigating to detail screen here
-      // const saveRecipeResult = await CreateRecipe({
-      //   imageUrl: parsedJSON?.imageUrl,
-      //   jsonData: parsedJSON,
-      //   recipeName: recipe?.recipeName,
-      //   uid: user?._id,
-      // });
+			// You can continue with saving to DB or navigating to detail screen here
+			const saveRecipeResult = await CreateRecipe({
+				imageUrl: parsedJSON?.imageUrl,
+				jsonData: parsedJSON,
+				recipeName: recipe?.recipeName,
+				uid: user?._id,
+			});
 
-      const saveRecipeResult = "jn79xbdyf2yx6vyrfp66718c5h7fda7f"; // For testing purpose
       router.push({
         pathname: "/recipe-detail",
         params: { recipeId: saveRecipeResult },

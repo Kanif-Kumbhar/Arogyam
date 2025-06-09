@@ -1,17 +1,13 @@
-import { View, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { LinearGradient } from 'expo-linear-gradient'
-import Colors from '../../shared/Colors'
+import { View, Text, TouchableOpacity } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import Colors from "../../shared/Colors";
 import { HugeiconsIcon } from "@hugeicons/react-native";
-import {
-  ArrowRight02FreeIcon,
-  ArrowRight02FreeIcons,
-} from "@hugeicons/core-free-icons";
+import { ArrowRight02FreeIcons } from "@hugeicons/core-free-icons";
 import { useRouter } from "expo-router";
 
 export default function GenerateRecipeCard() {
-  const router = useRouter();
-  return (
+	const router = useRouter();
+	return (
 		<LinearGradient
 			colors={[Colors.BLUE, Colors.PRIMARY]}
 			style={{

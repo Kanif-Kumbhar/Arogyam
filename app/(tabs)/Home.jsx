@@ -1,5 +1,12 @@
-import { View, Text, FlatList, Animated, Easing } from "react-native";
-import React, { useContext, useEffect, useRef } from "react";
+import {
+	View,
+	FlatList,
+	Animated,
+	Easing,
+	Modal,
+	StyleSheet,
+} from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "./../../context/UserContext";
 import { useRouter } from "expo-router";
 import HomeHeader from "../../components/home/HomeHeader";
@@ -7,15 +14,22 @@ import TodayProgress from "../../components/home/TodayProgress";
 import GenerateRecipeCard from "../../components/home/GenerateRecipeCard";
 import TodaysMealPlan from "../../components/home/TodaysMealPlan";
 import Scanner from "../../components/home/Scanner";
+import Loader from "../../components/shared/Loader";
 
 export default function Home() {
 	const { user } = useContext(UserContext);
 	const router = useRouter();
-
 	const translateY = useRef(new Animated.Value(0)).current;
 
+	const [loading, setLoading] = useState(true);
+
 	useEffect(() => {
-		if (!user?.weight) {
+		const timer = setTimeout(() => setLoading(false), 3000);
+		return () => clearTimeout(timer);
+	}, []);
+
+	useEffect(() => {
+		if (user && !user.weight) {
 			router.replace("/preferance");
 		}
 	}, [user]);
@@ -33,8 +47,23 @@ export default function Home() {
 		}).start();
 	};
 
+	const LoaderModal = ({ visible }) => (
+		<Modal
+			visible={visible}
+			transparent
+			animationType="fade"
+			statusBarTranslucent
+		>
+			<View style={styles.overlay}>
+				<Loader />
+			</View>
+		</Modal>
+	);
+
 	return (
 		<View style={{ flex: 1 }}>
+			<LoaderModal visible={loading} />
+
 			<FlatList
 				data={[]}
 				renderItem={() => null}
@@ -64,3 +93,12 @@ export default function Home() {
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	overlay: {
+		flex: 1,
+		backgroundColor: "rgba(0,0,0,0.4)",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+});

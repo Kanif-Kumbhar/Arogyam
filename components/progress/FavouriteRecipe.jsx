@@ -8,7 +8,6 @@ import RecipeCard from "../../components/recipe/RecipeCard";
 export default function FavouriteRecipe({userId}) {
     
     const favouriteRecipes = useQuery(api.MealPlan.GetFavouriteRecipe,{userId});
-    console.log("fav",favouriteRecipes);
     
     return (
 			<View>

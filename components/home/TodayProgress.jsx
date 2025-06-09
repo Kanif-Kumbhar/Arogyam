@@ -29,9 +29,10 @@ export default function TodayProgress() {
 		setTotalCaloriesConsumed(result);
 	};
 
-	const data = useQuery(api.NutritionProfile.GetLatestNutritionProfile, {
-		userId: user?._id,
-	});
+	const data = useQuery(
+		api.NutritionProfile.GetLatestNutritionProfile,
+		user?._id ? { userId: user._id } : undefined
+	);	  
 
 	// Animate progress bar when values change
 	useEffect(() => {

@@ -35,7 +35,7 @@ export default function RecipeSteps({recipeDetail}) {
 								alignItems: "center",
 								borderWidth: 0.3,
 								borderRadius: 15,
-								backgroundColor: Colors.PRIMARY2,
+								backgroundColor: Colors.SECONDARY,
 							}}
 						>
 							<Text

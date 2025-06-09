@@ -22,12 +22,11 @@ export default function GenerateAiRecipe() {
 	const router = useRouter();
 
 	const GenerateRecipeOption = async () => {
-		const saveRecipeResult = "jn79xbdyf2yx6vyrfp66718c5h7fda7f"; // For testing purpose
 		router.push({
 			pathname: "/recipe-detail",
 			params: { recipeId: saveRecipeResult },
 		});
-
+		console.log("Generating recipe option with input:", recipeOption);
 		setLoading(true);
 		try {
 			const PROMPT = `
@@ -36,18 +35,18 @@ export default function GenerateAiRecipe() {
             ${Prompt.GENERATE_RECIPE_OPTION_PROMPT}
             `;
 
-			// const result = await GenerateRecipeAI(PROMPT);
-			// const content = result?.choices?.[0]?.message?.content;
+			const result = await GenerateRecipeAI(PROMPT);
+			const content = result?.choices?.[0]?.message?.content;
 
-			// if (!content) {
-			// 	console.log("⚠️ AI response content is undefined or missing:", result);
-			// 	setLoading(false);
-			// 	return;
-			// }
+			if (!content) {
+				console.log("⚠️ AI response content is undefined or missing:", result);
+				setLoading(false);
+				return;
+			}
 
-			// const extratedJSON = content.replace("```json", "").replace("```", "");
-			// const parsedJSON = JSON.parse(extratedJSON);
-			// setRecipeOption(parsedJSON);
+			const extratedJSON = content.replace("```json", "").replace("```", "");
+			const parsedJSON = JSON.parse(extratedJSON);
+			setRecipeOption(parsedJSON);
 		} catch (error) {
 			console.log(error);
 		}

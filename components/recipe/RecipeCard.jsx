@@ -14,6 +14,7 @@ export default function RecipeCard({ recipe, fullWidth = false }) {
 		<Link
 			href={"/recipe-detail?recipeId=" + recipe?._id}
 			style={{
+				marginTop: 10,
 				flex: fullWidth ? undefined : 1,
 				width: fullWidth ? "100%" : undefined,
 			}}

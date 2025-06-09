@@ -37,7 +37,6 @@ export default function NutriScore({ grade = "C" }) {
 	return (
 		<View
 			style={{
-				marginTop: 15,
 				padding: 15,
 				backgroundColor: Colors.WHITE,
 				borderRadius: 10,
